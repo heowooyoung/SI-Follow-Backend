@@ -10,3 +10,7 @@ class AccountService(ABC):
     @abstractmethod
     def registerAccount(self, loginType, roleType, email):
         pass
+
+    @abstractmethod
+    def create(self, loginType, roleType):
+        pass

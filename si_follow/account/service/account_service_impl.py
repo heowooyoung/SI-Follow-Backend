@@ -30,3 +30,6 @@ class AccountServiceImpl(AccountService):
     def registerAccount(self, loginType, roleType, email):
         account = self.__accountRepository.create(loginType, roleType)
         return self.__profileRepository.create(email, account)
+
+    def create(self, loginType, roleType):
+        return self.__accountRepository.create(loginType, roleType)

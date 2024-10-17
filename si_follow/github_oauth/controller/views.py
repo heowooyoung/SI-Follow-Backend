@@ -51,16 +51,28 @@ class GithubOauthView(viewsets.ViewSet):
             if not email:
                 return JsonResponse({'error': 'Email not found in user info'}, status=400)
 
-            # 3. Redis에 Access Token과 이메일 저장
+            # 3. Profile 조회 (이메일로 찾기)
+            profile = self.profileRepository.findByEmail(email)
+
+            # 4. Profile이 없으면 새로운 Account 생성 및 Profile 생성
+            if not profile:
+                print(f"Profile not found for email: {email}, creating new account and profile.")
+
+                # GitHub OAuth로 로그인한 사용자이므로 loginType을 "GitHub"으로 설정
+                account = self.accountService.create("GitHub", "User")
+                self.profileRepository.create(email=email, account=account)
+
+            # 5. Redis에 Access Token과 이메일 저장
             redis_token_response = self.redisAccessToken(email, accessToken)
+            print(f"Redis token response: {redis_token_response}")
             if redis_token_response.status_code != 200:
                 return JsonResponse({'error': 'Failed to store token in Redis'},
                                     status=redis_token_response.status_code)
 
-            # 4. Redis에서 발급된 userToken 가져오기
+            # 6. Redis에서 발급된 userToken 가져오기
             user_token = redis_token_response.data.get('userToken')
 
-            # 5. userToken만 프론트엔드에 반환
+            # 7. userToken만 프론트엔드에 반환
             return JsonResponse({'userToken': user_token}, status=200)
 
         except Exception as e:
