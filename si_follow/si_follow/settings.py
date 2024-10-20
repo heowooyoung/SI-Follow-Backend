@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'redis_service',
     'board',
     'si_follow',
+    'ai_result',
 ]
 
 MIDDLEWARE = [
@@ -83,13 +84,13 @@ GITHUB = {
     'USERINFO_EMAIL_REQUEST_URI': os.getenv('USERINFO_EMAIL_REQUEST_URI_GITHUB')
 }
 
+FAST_API_URL = os.getenv('FAST_API_URL')
+
 CORS_ALLOWED_ORIGINS = [origin for origin in os.getenv('CORS_ALLOWED_ORIGINS', '').split(',') if origin]
 CSRF_TRUSTED_ORIGINS = [origin for origin in os.getenv('CSRF_TRUSTED_ORIGINS', '').split(',') if origin]
-print('CORS_ALLOWED_ORIGINS from .env:', os.getenv('CORS_ALLOWED_ORIGINS'))
-print('CSRF_TRUSTED_ORIGINS from .env:', os.getenv('CSRF_TRUSTED_ORIGINS'))
+
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
-print('CORS_ALLOWED_ORIGINS:', CORS_ALLOWED_ORIGINS)
 
 CORS_ALLOW_CREDENTIALS = True
 
@@ -155,7 +156,7 @@ REDIS_PASSWORD = os.getenv('REDIS_PASSWORD')
 CACHES = {
     'default': {
         'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': f'redis_service://{REDIS_HOST}:{REDIS_PORT}/0',
+        'LOCATION': f'redis://{REDIS_HOST}:{REDIS_PORT}/0',
         'OPTIONS': {
             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
             'PASSWORD': REDIS_PASSWORD,

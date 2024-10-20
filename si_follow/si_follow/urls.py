@@ -22,4 +22,6 @@ urlpatterns = [
     path('account/', include('account.urls')),
     path('kakao_oauth/', include('kakao_oauth.urls')),
     path('github_oauth/', include('github_oauth.urls')),
+    path('board/', include('board.urls')),
+    path('ai_result/', include('ai_result.urls')),
 ]
